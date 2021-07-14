@@ -1,0 +1,31 @@
+{
+    "name": "pugmire",
+    "title": "Pugmire",
+    "description": "A simple mod that changes the 5e system to accomodate Pugmire games.",
+    "author": "Matheus Clemente",
+    "url": "https://github.com/mclemente/fvtt-pugmire",
+    "manifest": "https://github.com/mclemente/fvtt-pugmire/releases/latest/download/module.json",
+    "download": "https://github.com/mclemente/fvtt-pugmire/releases/latest/download/module.zip",
+    "version": "1.0.0",
+    "minimumCoreVersion": "0.8.8",
+    "compatibleCoreVersion": "0.8.8",
+    "system": ["dnd5e"],
+    "esmodules": [
+      "pugmire.js"
+    ],
+    "styles": [
+      "pugmire.css"
+    ],
+    "languages": [
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "lang/en.json"
+        }
+    ],
+    "dependencies": [{
+        "name": "lancer-initiative",
+        "manifest": "https://github.com/BoltsJ/lancer-initiative/releases/latest/download/module.json"
+      }
+    ]
+}
