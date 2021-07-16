@@ -28,38 +28,7 @@ Hooks.on('init', function() {
 	CONFIG.DND5E.languages = {
 		"common": "DND5E.LanguagesCommon"
 	};
-	CONFIG.DND5E.skills = {
-		//Str
-		"itm": "DND5E.SkillItm", //Intimidate
-		
-		//Dex
-		"acr": "DND5E.SkillAcr", //Balance
-		"slt": "DND5E.SkillSlt", //Steal
-		"ste": "DND5E.SkillSte", //Sneak
-		
-		//Con
-		"ath": "DND5E.SkillAth", //Traverse
-		
-		//Int
-		"arc": "DND5E.SkillArc", //Know Arcana
-		"cul": "PUGMIRE.SkillCul", //Know Culture
-		"his": "DND5E.SkillHis", //Know History
-		"nat": "DND5E.SkillNat", //Know Nature
-		"rel": "DND5E.SkillRel", //Know Religion
-		
-		//Wis
-		"ani": "DND5E.SkillAni", //Handle Animal
-		"med": "DND5E.SkillMed", //Heal
-		"prc": "DND5E.SkillPrc", //Notice
-		"inv": "DND5E.SkillInv", //Search
-		"ins": "DND5E.SkillIns", //Sense Motive
-		"sur": "DND5E.SkillSur", //Survive
-		
-		//Cha
-		"dec": "DND5E.SkillDec", //Bluff
-		"prf": "DND5E.SkillPrf", //Perform
-		"per": "DND5E.SkillPer" //Persuade
-	};
+	CONFIG.DND5E.skills["cul"] = "PUGMIRE.SkillCul";
 
 	/**
 	 * Disable experience tracking and remove it from the config menu.
