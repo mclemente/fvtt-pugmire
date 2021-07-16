@@ -1,112 +1,5 @@
-import ActorSheet5e from "../../systems/dnd5e/module/actor/sheets/base.js";
-
-class ActorPugmire extends Actor {
-	/**
-	* Replace skills
-	*/
-	async _preCreate(data, options, user) {
-		await super._preCreate(data, options, user);
-
-		// Token size category
-		const s = CONFIG.DND5E.tokenSizes[this.data.data.traits.size || "med"];
-		this.data.token.update({width: s, height: s});
-
-		// Player character configuration
-		if ( this.type === "character" ) {
-			this.data.token.update({vision: true, actorLink: true, disposition: 1});
-		}
-		this.data.update({
-			data: {
-				skills: {
-					ath: {ability: "con"},
-					cul: {
-						value: 0,
-						ability: "int"
-					},
-					inv: {ability: "wis"},
-					itm: {ability: "str"},
-				}
-			}
-		});
-	}
-	
-	/**
-	* Change proficiency calculation (from Math.floor((level + 7) / 4) to Math.floor((level + 3) / 2)
-	*/
-	_prepareCharacterData(actorData) {
-		const data = actorData.data;
-
-		// Determine character level and available hit dice based on owned Class items
-		const [level, hd] = this.items.reduce((arr, item) => {
-			if ( item.type === "class" ) {
-				const classLevels = parseInt(item.data.data.levels) || 1;
-				arr[0] += classLevels;
-				arr[1] += classLevels - (parseInt(item.data.data.hitDiceUsed) || 0);
-			}
-			return arr;
-		}, [0, 0]);
-		data.details.level = level;
-		data.attributes.hd = hd;
-
-		// Character proficiency bonus
-		data.attributes.prof = Math.floor((level + 3) / 2);
-
-		// Experience required for next level
-		const xp = data.details.xp;
-		xp.max = this.getLevelExp(level || 1);
-		const prior = this.getLevelExp(level - 1 || 0);
-		const required = xp.max - prior;
-		const pct = Math.round((xp.value - prior) * 100 / required);
-		xp.pct = Math.clamped(pct, 0, 100);
-	}
-}
-
-class ActorSheetPugmireCharacter extends ActorSheet5e {
-	/**
-   * Replace height from 680 to 690.
-   */
-	static get defaultOptions() {
-	  return mergeObject(super.defaultOptions, {
-      classes: ["dnd5e", "sheet", "actor", "character"],
-      width: 720,
-      height: 700
-    });
-  }
-	
-	/**
-	* Change max level to 10.
-	*/
-	async _onDropItemCreate(itemData) {
-		// Increment the number of class levels a character instead of creating a new item
-		if ( itemData.type === "class" ) {
-			const cls = this.actor.itemTypes.class.find(c => c.name === itemData.name);
-			let priorLevel = cls?.data.data.levels ?? 0;
-			if ( !!cls ) {
-				const next = Math.min(priorLevel + 1, 10 + priorLevel - this.actor.data.data.details.level);
-				if ( next > priorLevel ) {
-					itemData.levels = next;
-					return cls.update({"data.levels": next});
-				}
-			}
-		}
-
-		// Default drop handling if levels were not added
-		return super._onDropItemCreate(itemData);
-	}
-}
-
-class ActorSheetPugmireNPC extends ActorSheet5e {
-	/**
-   * Replace height from 680 to 690.
-   */
-	static get defaultOptions() {
-	  return mergeObject(super.defaultOptions, {
-      classes: ["dnd5e", "sheet", "actor", "npc"],
-      width: 600,
-      height: 700
-    });
-  }
-}
+import ActorSheet5eCharacter from "../../systems/dnd5e/module/actor/sheets/character.js";
+import ActorSheet5eNPC from "../../systems/dnd5e/module/actor/sheets/npc.js";
 
 Hooks.on('init', function() {
 	CONFIG.DND5E.conditionTypes = {
@@ -168,12 +61,6 @@ Hooks.on('init', function() {
 		"per": "DND5E.SkillPer" //Persuade
 	};
 
-	game.dnd5e.applications.ActorSheet5eCharacter.prototype.defaultOptions = ActorSheetPugmireCharacter.prototype.defaultOptions;
-	game.dnd5e.applications.ActorSheet5eCharacter.prototype._onDropItemCreate = ActorSheetPugmireCharacter.prototype._onDropItemCreate;
-	game.dnd5e.applications.ActorSheet5eNPC.prototype.defaultOptions = ActorSheetPugmireNPC.prototype.defaultOptions;
-	game.dnd5e.entities.Actor5e.prototype._preCreate = ActorPugmire.prototype._preCreate;
-	game.dnd5e.entities.Actor5e.prototype._prepareCharacterData = ActorPugmire.prototype._prepareCharacterData;
-
 	/**
 	 * Disable experience tracking and remove it from the config menu.
 	 */
@@ -187,6 +74,84 @@ Hooks.on('init', function() {
 	});
 });
 
+Hooks.on('setup', () => {
+	patchActor5ePreCreate();
+	patchActor5ePrepareCharacterData();
+	patchActorSheet5eDefaultOptions();
+	patchActorSheet5eOnDropItemCreate();
+	patchActorSheet5eNPCDefaultOptions();
+});
+
 Hooks.on('ready', async function() {
 	await game.settings.set("dnd5e", "disableExperienceTracking", true);
 });
+
+function patchActor5ePreCreate() {
+	libWrapper.register("pugmire", "CONFIG.Actor.entityClass.prototype._preCreate", function patchedPreCreate(wrapped, ...args) {
+		wrapped(...args);
+
+		this.data.update({
+			data: {
+				skills: {
+					ath: {ability: "con"},
+					cul: {
+						value: 0,
+						ability: "int"
+					},
+					inv: {ability: "wis"},
+					itm: {ability: "str"},
+				}
+			}
+		});
+	}, "WRAPPER");
+}
+
+function patchActor5ePrepareCharacterData() {
+	libWrapper.register("pugmire", "CONFIG.Actor.entityClass.prototype._prepareCharacterData", function patchedPrepareCharacterData(wrapped, ...args) {
+		wrapped(...args);
+		
+		const data = this.data.data;
+		const level = data.details.level;
+		data.attributes.prof = Math.floor((level + 3) / 2);
+	}, "WRAPPER");
+}
+
+function patchActorSheet5eDefaultOptions() {
+	libWrapper.register("pugmire", "game.dnd5e.applications.ActorSheet5eCharacter.defaultOptions", function patchedDefaultOptions(...args) {
+		return mergeObject(Object.getPrototypeOf(ActorSheet5eCharacter).defaultOptions, {
+			classes: ["dnd5e", "sheet", "actor", "character"],
+			width: 720,
+			height: 700
+		});
+	}, "OVERRIDE");
+}
+
+function patchActorSheet5eOnDropItemCreate() {
+	libWrapper.register("pugmire", "game.dnd5e.applications.ActorSheet5eCharacter.prototype._onDropItemCreate", async function patchedOnDropItemCreate(itemData) {
+		// Increment the number of class levels a character instead of creating a new item
+		if ( itemData.type === "class" ) {
+			const cls = this.actor.itemTypes.class.find(c => c.name === itemData.name);
+			let priorLevel = cls?.data.data.levels ?? 0;
+			if ( !!cls ) {
+				const next = Math.min(priorLevel + 1, 10 + priorLevel - this.actor.data.data.details.level);
+				if ( next > priorLevel ) {
+					itemData.levels = next;
+					return cls.update({"data.levels": next});
+				}
+			}
+		}
+
+		// Default drop handling if levels were not added
+		return Object.getPrototypeOf(ActorSheet5eCharacter).prototype._onDropItemCreate.apply(this, [itemData]);
+	}, "OVERRIDE");
+}
+
+function patchActorSheet5eNPCDefaultOptions() {
+	libWrapper.register("pugmire", "game.dnd5e.applications.ActorSheet5eNPC.defaultOptions", function patchedDefaultOptions(...args) {
+		return mergeObject(Object.getPrototypeOf(ActorSheet5eNPC).defaultOptions, {
+			classes: ["dnd5e", "sheet", "actor", "npc"],
+			width: 600,
+			height: 700
+		});
+	}, "OVERRIDE");
+}
