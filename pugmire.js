@@ -58,7 +58,7 @@ Hooks.on("ready", async function () {
 function patchActor5ePreCreate() {
 	libWrapper.register(
 		"pugmire",
-		"CONFIG.Actor.entityClass.prototype._preCreate",
+		"CONFIG.Actor.documentClass.prototype._preCreate",
 		function patchedPreCreate(wrapped, ...args) {
 			wrapped(...args);
 
@@ -83,7 +83,7 @@ function patchActor5ePreCreate() {
 function patchActor5ePrepareCharacterData() {
 	libWrapper.register(
 		"pugmire",
-		"CONFIG.Actor.entityClass.prototype._prepareCharacterData",
+		"CONFIG.Actor.documentClass.prototype._prepareCharacterData",
 		function patchedPrepareCharacterData(wrapped, ...args) {
 			wrapped(...args);
 
