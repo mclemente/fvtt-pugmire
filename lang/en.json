@@ -56,9 +56,9 @@
 		"SkillIns": "Sense Motives",
 		"SkillInv": "Search",
 		"SkillItm": "Intimidate",
-		"SkillMed": "Medicine",
+		"SkillMed": "Heal",
 		"SkillNat": "Know Nature",
-		"SkillPer": "Persuasion",
+		"SkillPer": "Persuade",
 		"SkillPrc": "Notice",
 		"SkillPrf": "Perform",
 		"SkillRel": "Know Religion",
@@ -66,7 +66,11 @@
 		"SkillSte": "Sneak",
 		"SkillSur": "Survive",
 
-		"SpellCantrip": "Basic"
+		"SpellCantrip": "Basic",
+
+		"MovementBurrow": "All Four",
+		"WeaponPropertiesTwo": "Two Pawed",
+		"WeaponPropertiesAda": "Masterwork"
 	},
 
 	"PUGMIRE": {
