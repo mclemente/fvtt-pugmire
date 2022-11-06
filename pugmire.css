@@ -1,8 +1,0 @@
-.dnd5e.sheet.actor.character,
-.dnd5e.sheet.actor.npc {
-	min-height: 700px;
-}
-
-.dnd5e.sheet.actor ul.skills-list {
-	height: 460px;
-}

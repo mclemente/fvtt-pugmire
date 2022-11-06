@@ -1,14 +1,23 @@
 {
-	"name": "pugmire",
+	"id": "pugmire",
 	"title": "Pugmire",
 	"description": "A simple mod that changes the 5e system to accomodate Pugmire games.",
-	"author": "Matheus Clemente",
+	"authors": [
+		{
+			"name": "Matheus Clemente",
+			"url": "https://github.com/mclemente",
+			"email": "matheus.xb@gmail.com",
+			"discord": "mclemente#5524"
+		}
+	],
 	"url": "https://github.com/mclemente/fvtt-pugmire",
 	"manifest": "https://github.com/mclemente/fvtt-pugmire/releases/latest/download/module.json",
 	"download": "https://github.com/mclemente/fvtt-pugmire/releases/latest/download/module.zip",
 	"version": "1.1.0",
-	"minimumCoreVersion": "9",
-	"compatibleCoreVersion": "9",
+	"compatibility": {
+		"minimum": "10",
+		"verified": "10"
+	},
 	"system": ["dnd5e"],
 	"esmodules": ["pugmire.js"],
 	"styles": ["pugmire.css"],
@@ -19,14 +28,27 @@
 			"path": "lang/en.json"
 		}
 	],
-	"dependencies": [
-		{
-			"name": "lancer-initiative",
-			"manifest": "https://github.com/BoltsJ/lancer-initiative/releases/latest/download/module.json"
-		},
-		{
-			"name": "lib-wrapper",
-			"manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/latest/download/module.json"
-		}
-	]
+	"relationships": {
+		"requires": [
+			{
+				"id": "lancer-initiative",
+				"type": "module",
+				"manifest": "https://github.com/BoltsJ/lancer-initiative/releases/latest/download/module.json",
+				"compatibility": {}
+			},
+			{
+				"id": "lib-wrapper",
+				"type": "module",
+				"manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/latest/download/module.json",
+				"compatibility": {}
+			}
+		],
+		"systems": [
+			{
+				"id": "dnd5e",
+				"type": "system",
+				"compatibility": {}
+			}
+		]
+	}
 }
