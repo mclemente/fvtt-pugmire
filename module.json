@@ -20,7 +20,7 @@
 	},
 	"system": ["dnd5e"],
 	"esmodules": ["pugmire.js"],
-	"styles": ["pugmire.css"],
+	"styles": [],
 	"languages": [
 		{
 			"lang": "en",
