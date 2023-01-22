@@ -16,7 +16,7 @@
 	"version": "1.1.0",
 	"compatibility": {
 		"minimum": "10",
-		"verified": "10"
+		"verified": "11"
 	},
 	"system": ["dnd5e"],
 	"esmodules": ["pugmire.js"],
@@ -47,7 +47,10 @@
 			{
 				"id": "dnd5e",
 				"type": "system",
-				"compatibility": {}
+				"compatibility": {
+					"minimum": "2.0.1",
+					"verified": "2.1.2"
+				}
 			}
 		]
 	}
