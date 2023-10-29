@@ -25,7 +25,10 @@ Hooks.on("init", function () {
 	CONFIG.DND5E.languages = {
 		common: "DND5E.LanguagesCommon",
 	};
-	CONFIG.DND5E.skills["cul"] = { label: "PUGMIRE.SkillCul", ability: "int" };
+	CONFIG.DND5E.skills.ath.ability = "con";
+	CONFIG.DND5E.skills.cul = { label: "PUGMIRE.SkillCul", ability: "int" };
+	CONFIG.DND5E.skills.inv.ability = "wis";
+	CONFIG.DND5E.skills.itm.ability = "str";
 	CONFIG.DND5E.maxLevel = 10;
 
 	/**
@@ -42,44 +45,11 @@ Hooks.on("init", function () {
 });
 
 Hooks.on("setup", () => {
-	patchActor5ePreCreate();
-	patchActor5ePrepareCharacterData();
+	dnd5e.documents.Proficiency.calculateMod = (level) => {
+		return Math.floor((level + 3) / 2);
+	};
 });
 
 Hooks.on("ready", async () => {
 	await game.settings.set("dnd5e", "disableExperienceTracking", true);
 });
-
-function patchActor5ePreCreate() {
-	libWrapper.register(
-		"pugmire",
-		"CONFIG.Actor.documentClass.prototype._preCreate",
-		function patchedPreCreate(wrapped, ...args) {
-			wrapped(...args);
-
-			this.updateSource({
-				system: {
-					skills: {
-						ath: { ability: "con" },
-						inv: { ability: "wis" },
-						itm: { ability: "str" },
-					},
-				},
-			});
-		},
-		"WRAPPER"
-	);
-}
-
-function patchActor5ePrepareCharacterData() {
-	libWrapper.register(
-		"pugmire",
-		"CONFIG.Actor.documentClass.prototype._prepareCharacterData",
-		function patchedPrepareCharacterData(wrapped, ...args) {
-			wrapped(...args);
-
-			this.system.attributes.prof = Math.floor((this.system.details.level + 3) / 2);
-		},
-		"WRAPPER"
-	);
-}

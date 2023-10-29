@@ -15,7 +15,7 @@
 	"download": "https://github.com/mclemente/fvtt-pugmire/releases/latest/download/module.zip",
 	"version": "1.1.0",
 	"compatibility": {
-		"minimum": "10",
+		"minimum": "11",
 		"verified": "11"
 	},
 	"system": ["dnd5e"],
@@ -31,15 +31,9 @@
 	"relationships": {
 		"requires": [
 			{
-				"id": "lancer-initiative",
+				"id": "just-popcorn-initiative",
 				"type": "module",
-				"manifest": "https://github.com/BoltsJ/lancer-initiative/releases/latest/download/module.json",
-				"compatibility": {}
-			},
-			{
-				"id": "lib-wrapper",
-				"type": "module",
-				"manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/latest/download/module.json",
+				"manifest": "https://github.com/Gerark/just-popcorn-initiative/releases/latest/download/module.json",
 				"compatibility": {}
 			}
 		],
@@ -49,7 +43,7 @@
 				"type": "system",
 				"compatibility": {
 					"minimum": "2.0.1",
-					"verified": "2.1.2"
+					"verified": "2.3.1"
 				}
 			}
 		]
