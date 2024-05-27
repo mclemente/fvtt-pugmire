@@ -1,27 +1,36 @@
 Hooks.on("init", function () {
-	CONFIG.DND5E.conditionTypes = {
-		anosmic: "PUGMIRE.ConAnosmic",
-		confused: "PUGMIRE.ConConfused",
-		immobile: "PUGMIRE.ConImmobile",
-		possessed: "PUGMIRE.ConPossessed",
-		repelled: "PUGMIRE.ConRepelled",
-		blinded: "DND5E.ConBlinded",
-		charmed: "DND5E.ConCharmed",
-		deafened: "DND5E.ConDeafened",
-		// "diseased": "DND5E.ConDiseased",
-		// "exhaustion": "DND5E.ConExhaustion",
-		frightened: "DND5E.ConFrightened",
-		// "grappled": "DND5E.ConGrappled",
-		incapacitated: "DND5E.ConIncapacitated",
-		invisible: "DND5E.ConInvisible",
-		paralyzed: "DND5E.ConParalyzed",
-		petrified: "DND5E.ConPetrified",
-		poisoned: "DND5E.ConPoisoned",
-		prone: "DND5E.ConProne",
-		// "restrained": "DND5E.ConRestrained",
-		stunned: "DND5E.ConStunned",
-		unconscious: "DND5E.ConUnconscious",
+	const newConditions = {
+		anosmic: {
+			icon: "systems/dnd5e/icons/svg/statuses/diseased.svg",
+			label: "PUGMIRE.ConAnosmic",
+		},
+		confused: {
+			icon: "modules/pugmire/icons/confused.webp",
+			label: "PUGMIRE.ConConfused",
+		},
+		possessed: {
+			icon: "modules/pugmire/icons/possessed.webp",
+			label: "PUGMIRE.ConPossessed",
+		},
+		repelled: {
+			icon: "modules/pugmire/icons/fleeing.webp",
+			label: "PUGMIRE.ConRepelled",
+		},
 	};
+	delete CONFIG.DND5E.conditionTypes.diseased;
+	delete CONFIG.DND5E.conditionTypes.grappled;
+	CONFIG.DND5E.conditionTypes.restrained.label = "PUGMIRE.ConImmobile";
+
+	Object.entries(newConditions).forEach(([key, data]) => {
+		CONFIG.DND5E.conditionTypes[key] = data;
+		CONFIG.statusEffects.push({
+			_id: dnd5e.utils.staticID(`pugmire${key}`),
+			id: key,
+			img: data.icon,
+			name: data.label,
+		});
+	});
+
 	CONFIG.DND5E.languages = {
 		common: "DND5E.LanguagesCommon",
 	};
